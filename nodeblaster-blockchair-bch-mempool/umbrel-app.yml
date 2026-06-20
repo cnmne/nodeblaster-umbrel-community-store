@@ -1,0 +1,25 @@
+manifestVersion: 1
+id: nodeblaster-blockchair-bch-mempool
+name: Blockchair BCH Mempool
+tagline: Open Blockchair's Bitcoin Cash mempool transactions view
+icon: https://blockchair.com/favicon.ico
+category: bitcoin
+version: "1.0.0"
+port: 27830
+description: >-
+  Adds a native umbrelOS desktop tile that opens the Blockchair Bitcoin Cash
+  mempool transactions page in your browser.
+developer: NodeBlaster
+website: https://blockchair.com/bitcoin-cash/mempool/transactions
+repo: https://github.com/cnmne/nodeblaster-umbrel-community-store
+support: https://github.com/cnmne/nodeblaster-umbrel-community-store/issues
+gallery:
+  - https://blockchair.com/favicon.ico
+releaseNotes: >-
+  Initial shortcut app for the Blockchair Bitcoin Cash mempool transactions
+  page.
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+

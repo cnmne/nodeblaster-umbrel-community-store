@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  app_proxy:
+    environment:
+      APP_HOST: nodeblaster-blockchair-bch-mempool_server_1
+      APP_PORT: 8080
+
+  server:
+    image: nginxinc/nginx-unprivileged:1.27-alpine
+    user: "1000:1000"
+    init: true
+    restart: on-failure
+    volumes:
+      - ${APP_DATA_DIR}/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+

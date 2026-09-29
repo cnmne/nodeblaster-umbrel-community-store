@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+set -eu
+
+: "${SCRIPT_APP_REPO_DIR:?missing app repository}"
+: "${APP_DATA_DIR:?missing app data directory}"
+
+stage="$(mktemp -d "${APP_DATA_DIR}/.nodeblaster-update.XXXXXX")"
+cleanup() {
+  rm -rf -- "${stage}"
+}
+trap cleanup EXIT INT TERM
+
+for item in server.js README.md icon.svg; do
+  test -f "${SCRIPT_APP_REPO_DIR}/${item}"
+  cp -a "${SCRIPT_APP_REPO_DIR}/${item}" "${stage}/${item}"
+done
+test -d "${SCRIPT_APP_REPO_DIR}/www"
+cp -a "${SCRIPT_APP_REPO_DIR}/www" "${stage}/www"
+
+for item in server.js README.md icon.svg; do
+  mv -f "${stage}/${item}" "${APP_DATA_DIR}/${item}"
+done
+
+previous="${stage}/www.previous"
+if test -d "${APP_DATA_DIR}/www"; then
+  mv "${APP_DATA_DIR}/www" "${previous}"
+fi
+if ! mv "${stage}/www" "${APP_DATA_DIR}/www"; then
+  test ! -d "${previous}" || mv "${previous}" "${APP_DATA_DIR}/www"
+  exit 1
+fi
+rm -rf -- "${previous}"

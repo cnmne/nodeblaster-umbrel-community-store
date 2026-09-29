@@ -1,0 +1,26 @@
+manifestVersion: 1
+id: nodeblaster-control
+name: NodeBlaster Suite
+tagline: Licensed mining tools for your Umbrel
+icon: https://raw.githubusercontent.com/cnmne/nodeblaster-umbrel-community-store/master/nodeblaster-control/icon.svg
+category: bitcoin
+version: "0.3.0"
+port: 27832
+description: >-
+  Install and manage the licensed NodeBlaster appliance suite on an existing
+  Umbrel. View license, host-agent, updater, and display status from one local
+  control panel. Privileged features require the separately installed signed
+  NodeBlaster host agent.
+developer: NodeBlaster
+website: https://nodeblaster.com
+repo: https://github.com/cnmne/nodeblaster-umbrel-community-store
+support: https://nodeblaster.com/support/
+gallery:
+  - https://raw.githubusercontent.com/cnmne/nodeblaster-umbrel-community-store/master/nodeblaster-control/icon.svg
+releaseNotes: >-
+  Adds durable in-place upgrades for the app server and interface while
+  preserving license state, preferences, and the private host bridge.
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""

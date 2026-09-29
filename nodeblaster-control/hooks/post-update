@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+set -eu
+
+"$(dirname "$0")/pre-update"
+"${UMBREL_ROOT}/scripts/app" restart nodeblaster-control

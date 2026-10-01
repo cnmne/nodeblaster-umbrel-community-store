@@ -4,7 +4,7 @@ name: NodeBlaster Suite
 tagline: Licensed mining tools for your Umbrel
 icon: https://raw.githubusercontent.com/cnmne/nodeblaster-umbrel-community-store/master/nodeblaster-control/icon.svg
 category: bitcoin
-version: "0.4.1"
+version: "0.4.2"
 port: 27832
 description: >-
   Install and manage the licensed NodeBlaster appliance suite on an existing
@@ -18,8 +18,8 @@ support: https://nodeblaster.com/support/
 gallery:
   - https://raw.githubusercontent.com/cnmne/nodeblaster-umbrel-community-store/master/nodeblaster-control/icon.svg
 releaseNotes: >-
-  Fixes application-data permissions during zero-touch installation on a
-  stock Umbrel 2.0 system so license activation works without manual repair.
+  Fixes application-data permissions during zero-touch installation on stock
+  Umbrel 2.0 and reconnects the signed host agent after app reinstalls.
 dependencies: []
 path: ""
 defaultUsername: ""

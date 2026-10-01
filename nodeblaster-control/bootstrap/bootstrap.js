@@ -137,7 +137,9 @@ function main() {
   try { fs.chownSync(runtime, 1000, 1000); } catch (error) { if (process.platform !== "win32") throw error; }
   installActivationUnits();
   systemctl("daemon-reload");
-  systemctl("enable", "--now", "nodeblaster-control-bridge.service", "nodeblaster-suite-activate.path");
+  systemctl("enable", "nodeblaster-control-bridge.service", "nodeblaster-suite-activate.path");
+  systemctl("restart", "nodeblaster-control-bridge.service");
+  systemctl("start", "nodeblaster-suite-activate.path");
   writeStatus("ready", "Signed host agent installed; ready for license activation");
 }
 

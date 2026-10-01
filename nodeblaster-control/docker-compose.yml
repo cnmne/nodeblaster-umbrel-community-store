@@ -31,6 +31,7 @@ services:
     environment:
       NODEBLASTER_HOST_ROOT: /proc/1/root
       NODEBLASTER_BOOTSTRAP_DIR: /bootstrap
+      NODEBLASTER_DATA_DIR: /data
       NODEBLASTER_BOOTSTRAP_STATUS: /data/bootstrap-status.json
     volumes:
       - ${APP_DATA_DIR}/bootstrap:/bootstrap:ro

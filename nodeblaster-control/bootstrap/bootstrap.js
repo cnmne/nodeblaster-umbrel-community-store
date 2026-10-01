@@ -6,6 +6,7 @@ const { spawnSync } = require("child_process");
 
 const ROOT = process.env.NODEBLASTER_HOST_ROOT || "/proc/1/root";
 const ASSETS = process.env.NODEBLASTER_BOOTSTRAP_DIR || "/bootstrap";
+const DATA_DIR = process.env.NODEBLASTER_DATA_DIR || "/data";
 const STATUS = process.env.NODEBLASTER_BOOTSTRAP_STATUS || "/data/bootstrap-status.json";
 const SKIP_SYSTEMD = process.env.NODEBLASTER_BOOTSTRAP_SKIP_SYSTEMD === "1";
 
@@ -50,6 +51,12 @@ function writeStatus(state, detail) {
   const temp = `${STATUS}.tmp`;
   fs.writeFileSync(temp, `${JSON.stringify({ schema: 1, state, detail, updated_at: new Date().toISOString() }, null, 2)}\n`, { mode: 0o644 });
   fs.renameSync(temp, STATUS);
+}
+
+function prepareAppData() {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.chmodSync(DATA_DIR, 0o770);
+  try { fs.chownSync(DATA_DIR, 1000, 1000); } catch (error) { if (process.platform !== "win32") throw error; }
 }
 
 function hostPath(target) {
@@ -114,6 +121,7 @@ function systemctl(...args) {
 }
 
 function main() {
+  prepareAppData();
   writeStatus("installing", "Verifying signed appliance packages");
   if (!fs.statSync(ROOT).isDirectory()) throw new Error("host root is unavailable");
   const trustedKeyPath = path.join(ASSETS, "trusted-release-key.pub");

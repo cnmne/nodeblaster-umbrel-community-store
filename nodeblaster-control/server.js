@@ -8,9 +8,10 @@ const PORT = Number(process.env.PORT || 8080);
 const DATA_DIR = process.env.NODEBLASTER_DATA_DIR || "/data";
 const WWW_DIR = process.env.NODEBLASTER_WWW_DIR || "/app/www";
 const CONFIG_PATH = path.join(DATA_DIR, "app-preferences.json");
+const BOOTSTRAP_STATUS = path.join(DATA_DIR, "bootstrap-status.json");
 const BRIDGE_SOCKET = path.join(DATA_DIR, "host-bridge", "bridge.sock");
 const BRIDGE_TOKEN = path.join(DATA_DIR, "host-bridge", "token");
-const VERSION = "0.3.0";
+const VERSION = "0.4.0";
 const MAX_BODY = 16 * 1024;
 const DISPLAY_STYLES = new Set([
   "shares", "dashboard", "gauges", "fleet", "slideshow", "carousel",
@@ -61,6 +62,15 @@ function readPreferences() {
     return { schema: 1, desired_display_style: style, updated_at: parsed.updated_at || null };
   } catch {
     return { schema: 1, desired_display_style: "fleet", updated_at: null };
+  }
+}
+
+function readBootstrapStatus() {
+  try {
+    const value = JSON.parse(fs.readFileSync(BOOTSTRAP_STATUS, "utf8"));
+    return { state: String(value.state || "unknown"), detail: String(value.detail || "") };
+  } catch {
+    return { state: "pending", detail: "Preparing signed host agent" };
   }
 }
 
@@ -128,6 +138,7 @@ async function statusPayload() {
     return {
       ok: true,
       app_version: VERSION,
+      bootstrap: readBootstrapStatus(),
       host_agent: { state: "not_installed" },
       license: { state: "inactive", message: "Install the signed host agent to activate the suite." },
       display: { installed: false, style: preferences.desired_display_style, pending: true },
@@ -201,6 +212,7 @@ const server = http.createServer(async (req, res) => {
         app_version: VERSION,
         data_writable: (() => { try { fs.accessSync(DATA_DIR, fs.constants.W_OK); return true; } catch { return false; } })(),
         host_agent_available: bridgeAvailable(),
+        bootstrap: readBootstrapStatus(),
         bridge_transport: "unix_socket",
         privileged_container: false,
       });

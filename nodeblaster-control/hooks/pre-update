@@ -16,6 +16,8 @@ for item in server.js README.md icon.svg; do
 done
 test -d "${SCRIPT_APP_REPO_DIR}/www"
 cp -a "${SCRIPT_APP_REPO_DIR}/www" "${stage}/www"
+test -d "${SCRIPT_APP_REPO_DIR}/bootstrap"
+cp -a "${SCRIPT_APP_REPO_DIR}/bootstrap" "${stage}/bootstrap"
 
 for item in server.js README.md icon.svg; do
   mv -f "${stage}/${item}" "${APP_DATA_DIR}/${item}"
@@ -27,6 +29,16 @@ if test -d "${APP_DATA_DIR}/www"; then
 fi
 if ! mv "${stage}/www" "${APP_DATA_DIR}/www"; then
   test ! -d "${previous}" || mv "${previous}" "${APP_DATA_DIR}/www"
+  exit 1
+fi
+rm -rf -- "${previous}"
+
+previous="${stage}/bootstrap.previous"
+if test -d "${APP_DATA_DIR}/bootstrap"; then
+  mv "${APP_DATA_DIR}/bootstrap" "${previous}"
+fi
+if ! mv "${stage}/bootstrap" "${APP_DATA_DIR}/bootstrap"; then
+  test ! -d "${previous}" || mv "${previous}" "${APP_DATA_DIR}/bootstrap"
   exit 1
 fi
 rm -rf -- "${previous}"

@@ -5,7 +5,8 @@ Public Umbrel companion app for licensed NodeBlaster appliance features.
 ## Boundary
 
 - Runs as UID/GID `1000:1000` without privileged mode, host networking, devices, Docker socket, or host filesystem mounts.
-- Host mutations require the separately installed, signed `nodeblaster-control-bridge` service.
+- A one-shot privileged helper verifies signed packages, installs the narrow host bridge, then exits.
+- Appliance services remain inactive until a valid local Suite license is activated.
 - The bridge uses `/data/host-bridge/bridge.sock` plus a private bearer token and exposes no network listener.
 - Missing license or agent states remain visible instead of being presented as successful configuration.
 

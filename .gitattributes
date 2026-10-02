@@ -1,4 +1,5 @@
 nodeblaster-control/** text eol=lf
+nodeblaster-control/*.png binary !eol
 nodeblaster-control/bootstrap/*-manifest.json binary !eol
 nodeblaster-control/bootstrap/*.tar.gz binary !eol
 nodeblaster-control/bootstrap/*.sig binary !eol

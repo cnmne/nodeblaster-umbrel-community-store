@@ -10,7 +10,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-for item in server.js README.md icon.svg; do
+for item in server.js README.md icon.svg icon.png; do
   test -f "${SCRIPT_APP_REPO_DIR}/${item}"
   cp -a "${SCRIPT_APP_REPO_DIR}/${item}" "${stage}/${item}"
 done
@@ -19,7 +19,7 @@ cp -a "${SCRIPT_APP_REPO_DIR}/www" "${stage}/www"
 test -d "${SCRIPT_APP_REPO_DIR}/bootstrap"
 cp -a "${SCRIPT_APP_REPO_DIR}/bootstrap" "${stage}/bootstrap"
 
-for item in server.js README.md icon.svg; do
+for item in server.js README.md icon.svg icon.png; do
   mv -f "${stage}/${item}" "${APP_DATA_DIR}/${item}"
 done
 

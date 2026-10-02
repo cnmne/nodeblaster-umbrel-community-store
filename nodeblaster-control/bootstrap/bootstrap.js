@@ -43,7 +43,7 @@ for (let slot = 1; slot <= 12; slot += 1) {
 
 const ARTIFACTS = [
   { name: "base", manifest: "base-manifest.json", signature: "base-manifest.json.sig", package: "base-package.tar.gz", version: "2026.09.26-stable133-display-polish-leaderboard-hold" },
-  { name: "bridge", manifest: "bridge-manifest.json", signature: "bridge-manifest.json.sig", package: "bridge-package.tar.gz", version: "2026.09.29-stable135-control-bridge-payload-candidate" },
+  { name: "bridge", manifest: "bridge-manifest.json", signature: "bridge-manifest.json.sig", package: "bridge-package.tar.gz", version: "2026.10.02-stable136-suite-install-progress" },
 ];
 
 function writeStatus(state, detail) {
@@ -114,8 +114,8 @@ function verifyAndInstall(artifact, trustedKey) {
 }
 
 function installActivationUnits() {
-  const service = `[Unit]\nDescription=Activate licensed NodeBlaster Suite services\nAfter=nodeblaster-control-bridge.service umbrel.service\nConditionPathExists=/home/umbrel/umbrel/nodeblaster-identity/control-entitlement-v2.json\n\n[Service]\nType=oneshot\nExecStart=/usr/bin/python3 /home/umbrel/umbrel/nodeblaster-branding/apply.py --mode full --wallpaper-selection preserve --display-policy apply\nExecStartPost=/usr/bin/systemctl enable --now nodeblaster-branding.timer nodeblaster-updater.timer nodeblaster-status.service nodeblaster-support-expire.timer\n\n[Install]\nWantedBy=multi-user.target\n`;
-  const pathUnit = `[Unit]\nDescription=Watch for NodeBlaster Suite activation\n\n[Path]\nPathExists=/home/umbrel/umbrel/nodeblaster-identity/control-entitlement-v2.json\nUnit=nodeblaster-suite-activate.service\n\n[Install]\nWantedBy=multi-user.target\n`;
+  const service = `[Unit]\nDescription=Activate licensed NodeBlaster Suite services\nAfter=nodeblaster-control-bridge.service umbrel.service\nConditionPathExists=/home/umbrel/umbrel/nodeblaster-identity/control-entitlement-v2.json\n\n[Service]\nType=oneshot\nExecStart=/bin/sh -ec 'marker=/home/umbrel/umbrel/nodeblaster-identity/suite-initialized; selection=default; if [ -e "$marker" ]; then selection=preserve; fi; /usr/bin/python3 /home/umbrel/umbrel/nodeblaster-branding/apply.py --mode full --wallpaper-selection "$selection" --display-policy apply; /usr/bin/install -o root -g root -m 0600 /dev/null "$marker"'\nExecStartPost=/usr/bin/systemctl enable --now nodeblaster-branding.timer nodeblaster-updater.timer nodeblaster-status.service nodeblaster-support-expire.timer\n\n[Install]\nWantedBy=multi-user.target\n`;
+  const pathUnit = `[Unit]\nDescription=Watch for NodeBlaster Suite activation\n\n[Path]\nPathChanged=/home/umbrel/umbrel/nodeblaster-identity/control-entitlement-v2.json\nUnit=nodeblaster-suite-activate.service\n\n[Install]\nWantedBy=multi-user.target\n`;
   for (const [name, content] of [["nodeblaster-suite-activate.service", service], ["nodeblaster-suite-activate.path", pathUnit]]) {
     const destination = hostPath(`/etc/systemd/system/${name}`);
     fs.writeFileSync(`${destination}.tmp`, content, { mode: 0o644 });
@@ -148,6 +148,9 @@ function main() {
   systemctl("enable", "nodeblaster-control-bridge.service", "nodeblaster-suite-activate.path");
   systemctl("restart", "nodeblaster-control-bridge.service");
   systemctl("start", "nodeblaster-suite-activate.path");
+  if (fs.existsSync(hostPath("/home/umbrel/umbrel/nodeblaster-identity/control-entitlement-v2.json"))) {
+    systemctl("start", "nodeblaster-suite-activate.service");
+  }
   writeStatus("ready", "Signed host agent installed; ready for license activation");
 }
 

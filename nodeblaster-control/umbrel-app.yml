@@ -4,7 +4,7 @@ name: NodeBlaster Suite
 tagline: Licensed mining tools for your Umbrel
 icon: https://raw.githubusercontent.com/cnmne/nodeblaster-umbrel-community-store/master/nodeblaster-control/icon.png
 category: bitcoin
-version: "0.4.5"
+version: "0.4.6"
 port: 27832
 description: >-
   Install and manage the licensed NodeBlaster appliance suite on an existing
@@ -18,9 +18,8 @@ support: https://nodeblaster.com/support/
 gallery:
   - https://raw.githubusercontent.com/cnmne/nodeblaster-umbrel-community-store/master/nodeblaster-control/icon.png
 releaseNotes: >-
-  Shows durable installation progress, installs the approved NodeBlaster badge,
-  selects the first NodeBlaster wallpaper on initial activation, and prevents
-  repeated activation runs.
+  Securely provisions private appliance settings during activation, while
+  keeping those settings encrypted in transit and out of public packages.
 dependencies: []
 path: ""
 defaultUsername: ""

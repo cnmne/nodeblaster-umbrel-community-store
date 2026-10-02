@@ -11,7 +11,7 @@ const CONFIG_PATH = path.join(DATA_DIR, "app-preferences.json");
 const BOOTSTRAP_STATUS = path.join(DATA_DIR, "bootstrap-status.json");
 const BRIDGE_SOCKET = path.join(DATA_DIR, "host-bridge", "bridge.sock");
 const BRIDGE_TOKEN = path.join(DATA_DIR, "host-bridge", "token");
-const VERSION = "0.4.2";
+const VERSION = "0.4.3";
 const MAX_BODY = 16 * 1024;
 const DISPLAY_STYLES = new Set([
   "shares", "dashboard", "gauges", "fleet", "slideshow", "carousel",
@@ -118,7 +118,12 @@ function bridgeRequest(method, requestPath, payload) {
       response.on("end", () => {
         try {
           const result = JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
-          if ((response.statusCode || 500) >= 400) reject(new Error(result.error || "bridge_request_failed"));
+          if ((response.statusCode || 500) >= 400) {
+            const bridgeError = new Error(result.error || "bridge_request_failed");
+            bridgeError.bridgeResponse = true;
+            bridgeError.statusCode = response.statusCode || 502;
+            reject(bridgeError);
+          }
           else resolve(result);
         } catch (error) {
           reject(error);
@@ -130,6 +135,30 @@ function bridgeRequest(method, requestPath, payload) {
     if (body) request.write(body);
     request.end();
   });
+}
+
+function publicRequestError(error) {
+  const message = String(error?.message || "");
+  const allowed = new Set([
+    "host_agent_unavailable", "unsupported_display_style", "invalid_request_size",
+    "request_too_large", "object_required", "bridge_timeout",
+    "bridge_response_too_large",
+  ]);
+  if (allowed.has(message)) return { status: message === "host_agent_unavailable" ? 503 : 400, error: message };
+  if (error instanceof SyntaxError) return { status: 400, error: "invalid_json" };
+  if (error?.bridgeResponse) {
+    const safe = message.length <= 160 && /^[A-Za-z0-9 _.:+()-]+$/.test(message)
+      ? message
+      : "bridge_request_failed";
+    const status = Number.isInteger(error.statusCode) && error.statusCode >= 400 && error.statusCode <= 599
+      ? error.statusCode
+      : 502;
+    return { status, error: safe };
+  }
+  if (["ECONNREFUSED", "ECONNRESET", "EPIPE"].includes(String(error?.code || ""))) {
+    return { status: 502, error: "bridge_connection_failed" };
+  }
+  return { status: 400, error: "request_failed" };
 }
 
 async function statusPayload() {
@@ -220,12 +249,8 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET") return serveStatic(pathname, res);
     return send(res, 405, { ok: false, error: "method_not_allowed" });
   } catch (error) {
-    const allowed = new Set([
-      "host_agent_unavailable", "unsupported_display_style", "invalid_request_size",
-      "request_too_large", "object_required", "bridge_timeout",
-    ]);
-    const safe = allowed.has(error.message) ? error.message : "request_failed";
-    return send(res, safe === "host_agent_unavailable" ? 503 : 400, { ok: false, error: safe });
+    const safe = publicRequestError(error);
+    return send(res, safe.status, { ok: false, error: safe.error });
   }
 });
 

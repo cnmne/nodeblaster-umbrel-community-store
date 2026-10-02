@@ -59,6 +59,13 @@ function prepareAppData() {
   try { fs.chownSync(DATA_DIR, 1000, 1000); } catch (error) { if (process.platform !== "win32") throw error; }
 }
 
+function prepareIdentityDirectory() {
+  const identity = hostPath("/home/umbrel/umbrel/nodeblaster-identity");
+  fs.mkdirSync(identity, { recursive: true, mode: 0o700 });
+  fs.chmodSync(identity, 0o700);
+  try { fs.chownSync(identity, 0, 0); } catch (error) { if (process.platform !== "win32") throw error; }
+}
+
 function hostPath(target) {
   return path.join(ROOT, target.replace(/^\/+/, ""));
 }
@@ -135,6 +142,7 @@ function main() {
   fs.mkdirSync(runtime, { recursive: true, mode: 0o770 });
   fs.chmodSync(runtime, 0o770);
   try { fs.chownSync(runtime, 1000, 1000); } catch (error) { if (process.platform !== "win32") throw error; }
+  prepareIdentityDirectory();
   installActivationUnits();
   systemctl("daemon-reload");
   systemctl("enable", "nodeblaster-control-bridge.service", "nodeblaster-suite-activate.path");

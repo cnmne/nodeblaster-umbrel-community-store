@@ -11,7 +11,7 @@ const CONFIG_PATH = path.join(DATA_DIR, "app-preferences.json");
 const BOOTSTRAP_STATUS = path.join(DATA_DIR, "bootstrap-status.json");
 const BRIDGE_SOCKET = path.join(DATA_DIR, "host-bridge", "bridge.sock");
 const BRIDGE_TOKEN = path.join(DATA_DIR, "host-bridge", "token");
-const VERSION = "0.4.10";
+const VERSION = "0.4.11";
 const MAX_BODY = 16 * 1024;
 const DISPLAY_STYLES = new Set([
   "shares", "dashboard", "gauges", "fleet", "slideshow", "carousel",

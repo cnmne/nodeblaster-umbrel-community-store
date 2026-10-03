@@ -47,7 +47,7 @@ for (let slot = 1; slot <= 12; slot += 1) {
 
 const ARTIFACTS = [
   { name: "base", manifest: "base-manifest.json", signature: "base-manifest.json.sig", package: "base-package.tar.gz", version: "2026.09.26-stable133-display-polish-leaderboard-hold" },
-  { name: "bridge", manifest: "bridge-manifest.json", signature: "bridge-manifest.json.sig", package: "bridge-package.tar.gz", version: "2026.10.02-stable141-suite-widget-idempotent" },
+  { name: "bridge", manifest: "bridge-manifest.json", signature: "bridge-manifest.json.sig", package: "bridge-package.tar.gz", version: "2026.10.02-stable142-suite-approved-favicon" },
 ];
 
 function writeStatus(state, detail) {

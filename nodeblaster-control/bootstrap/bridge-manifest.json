@@ -2,12 +2,12 @@
   "schema": 1,
   "product": "nodeblaster-umbrel-unit",
   "channel": "stable-control-bridge-payload-candidate",
-  "version": "2026.10.02-stable143-suite-widget-umbrel2",
-  "generated_at": "2026-10-03T04:32:37Z",
-  "package_url": "packages/nodeblaster-unit-2026.10.02-stable143-suite-widget-umbrel2.tar.gz",
+  "version": "2026.10.02-stable144-suite-widget-registry-refresh",
+  "generated_at": "2026-10-03T04:48:44Z",
+  "package_url": "packages/nodeblaster-unit-2026.10.02-stable144-suite-widget-registry-refresh.tar.gz",
   "signature_url": "manifest.json.sig",
-  "sha256": "273903821d086b963bee1b06f70eac5c6e990b5bb73a95f125097f8e2d418dc9",
-  "size": 1890830,
+  "sha256": "1ad4c859e5092e86e47a01eb14d992036942e3a103c7a6fb80598e4f38c6e2bf",
+  "size": 1890845,
   "files": [
     "nodeblaster-updater/update.py",
     "systemd/nodeblaster-updater.service",
@@ -26,8 +26,8 @@
   ],
   "notes": "stable-control-bridge-payload-candidate channel package for NodeBlaster-owned updater, branding, status, display, and wallpaper files as selected by the build flags. Production requires signed manifest verification.",
   "release_notes_url": "",
-  "source_commit": "cdf3b60a53fcc04cbd54cf6aa1e3db18dbcc33c3",
-  "display_version": "Ver. 137",
+  "source_commit": "a603316159498b1c11b37b9861b26bc45f3cce99",
+  "display_version": "Ver. 138",
   "target_profiles": [
     "core",
     "core-plus"

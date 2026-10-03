@@ -35,6 +35,10 @@ const TARGETS = {
   "systemd/nodeblaster-hashwatcher-firewall.timer": ["/etc/systemd/system/nodeblaster-hashwatcher-firewall.timer", 0o644],
   "nodeblaster-control-bridge/bridge.py": ["/home/umbrel/umbrel/nodeblaster-control-bridge/bridge.py", 0o755],
   "systemd/nodeblaster-control-bridge.service": ["/etc/systemd/system/nodeblaster-control-bridge.service", 0o644],
+  "nodeblaster-updater/apps/nodeblaster-miner-widget/umbrel-app.yml": ["/home/umbrel/umbrel/nodeblaster-updater/apps/nodeblaster-miner-widget/umbrel-app.yml", 0o644],
+  "nodeblaster-updater/apps/nodeblaster-miner-widget/docker-compose.yml": ["/home/umbrel/umbrel/nodeblaster-updater/apps/nodeblaster-miner-widget/docker-compose.yml", 0o644],
+  "nodeblaster-updater/apps/nodeblaster-miner-widget/nginx.conf": ["/home/umbrel/umbrel/nodeblaster-updater/apps/nodeblaster-miner-widget/nginx.conf", 0o644],
+  "nodeblaster-updater/apps/nodeblaster-miner-widget/nodeblaster-miner-widget-icon.png": ["/home/umbrel/umbrel/nodeblaster-updater/apps/nodeblaster-miner-widget/nodeblaster-miner-widget-icon.png", 0o644],
 };
 for (let slot = 1; slot <= 12; slot += 1) {
   const name = `custom-wallpapers/source/slot-${String(slot).padStart(2, "0")}.jpg`;
@@ -43,7 +47,7 @@ for (let slot = 1; slot <= 12; slot += 1) {
 
 const ARTIFACTS = [
   { name: "base", manifest: "base-manifest.json", signature: "base-manifest.json.sig", package: "base-package.tar.gz", version: "2026.09.26-stable133-display-polish-leaderboard-hold" },
-  { name: "bridge", manifest: "bridge-manifest.json", signature: "bridge-manifest.json.sig", package: "bridge-package.tar.gz", version: "2026.10.02-stable137-suite-config-delivery" },
+  { name: "bridge", manifest: "bridge-manifest.json", signature: "bridge-manifest.json.sig", package: "bridge-package.tar.gz", version: "2026.10.02-stable138-suite-widget-delivery" },
 ];
 
 function writeStatus(state, detail) {
@@ -114,7 +118,7 @@ function verifyAndInstall(artifact, trustedKey) {
 }
 
 function installActivationUnits() {
-  const service = `[Unit]\nDescription=Activate licensed NodeBlaster Suite services\nAfter=nodeblaster-control-bridge.service umbrel.service\nConditionPathExists=/home/umbrel/umbrel/nodeblaster-identity/control-entitlement-v2.json\n\n[Service]\nType=oneshot\nExecStart=/bin/sh -ec 'marker=/home/umbrel/umbrel/nodeblaster-identity/suite-initialized; selection=default; if [ -e "$marker" ]; then selection=preserve; fi; /usr/bin/python3 /home/umbrel/umbrel/nodeblaster-branding/apply.py --mode full --wallpaper-selection "$selection" --display-policy apply; /usr/bin/install -o root -g root -m 0600 /dev/null "$marker"'\nExecStartPost=/usr/bin/systemctl enable --now nodeblaster-branding.timer nodeblaster-updater.timer nodeblaster-status.service nodeblaster-support-expire.timer\n\n[Install]\nWantedBy=multi-user.target\n`;
+  const service = `[Unit]\nDescription=Activate licensed NodeBlaster Suite services\nAfter=nodeblaster-control-bridge.service umbrel.service\nConditionPathExists=/home/umbrel/umbrel/nodeblaster-identity/control-entitlement-v2.json\n\n[Service]\nType=oneshot\nExecStart=/bin/sh -ec 'marker=/home/umbrel/umbrel/nodeblaster-identity/suite-initialized; selection=default; if [ -e "$marker" ]; then selection=preserve; fi; /usr/bin/python3 /home/umbrel/umbrel/nodeblaster-branding/apply.py --mode full --wallpaper-selection "$selection" --display-policy apply; /usr/bin/python3 /home/umbrel/umbrel/nodeblaster-updater/update.py --install-nodeblaster-widget; /usr/bin/install -o root -g root -m 0600 /dev/null "$marker"'\nExecStartPost=/usr/bin/systemctl enable --now nodeblaster-branding.timer nodeblaster-updater.timer nodeblaster-status.service nodeblaster-support-expire.timer\n\n[Install]\nWantedBy=multi-user.target\n`;
   const pathUnit = `[Unit]\nDescription=Watch for NodeBlaster Suite activation\n\n[Path]\nPathChanged=/home/umbrel/umbrel/nodeblaster-identity/control-entitlement-v2.json\nUnit=nodeblaster-suite-activate.service\n\n[Install]\nWantedBy=multi-user.target\n`;
   for (const [name, content] of [["nodeblaster-suite-activate.service", service], ["nodeblaster-suite-activate.path", pathUnit]]) {
     const destination = hostPath(`/etc/systemd/system/${name}`);

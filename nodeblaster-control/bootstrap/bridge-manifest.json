@@ -2,12 +2,12 @@
   "schema": 1,
   "product": "nodeblaster-umbrel-unit",
   "channel": "stable-control-bridge-payload-candidate",
-  "version": "2026.10.02-stable137-suite-config-delivery",
-  "generated_at": "2026-10-02T18:07:39Z",
-  "package_url": "packages/nodeblaster-unit-2026.10.02-stable137-suite-config-delivery.tar.gz",
+  "version": "2026.10.02-stable138-suite-widget-delivery",
+  "generated_at": "2026-10-03T01:25:02Z",
+  "package_url": "packages/nodeblaster-unit-2026.10.02-stable138-suite-widget-delivery.tar.gz",
   "signature_url": "manifest.json.sig",
-  "sha256": "c1144757d697409a6d235977ba921cfcf3ee08c4f5bf719bd570c08c32e02c8c",
-  "size": 38122,
+  "sha256": "9ef9bf89c1c2c9d1c182fd33ab79ac984bc3317d6dd370c0df235431534103dd",
+  "size": 1890665,
   "files": [
     "nodeblaster-updater/update.py",
     "systemd/nodeblaster-updater.service",
@@ -18,14 +18,21 @@
     "systemd/nodeblaster-branding.service",
     "systemd/nodeblaster-branding.timer",
     "nodeblaster-control-bridge/bridge.py",
-    "systemd/nodeblaster-control-bridge.service"
+    "systemd/nodeblaster-control-bridge.service",
+    "nodeblaster-updater/apps/nodeblaster-miner-widget/umbrel-app.yml",
+    "nodeblaster-updater/apps/nodeblaster-miner-widget/docker-compose.yml",
+    "nodeblaster-updater/apps/nodeblaster-miner-widget/nginx.conf",
+    "nodeblaster-updater/apps/nodeblaster-miner-widget/nodeblaster-miner-widget-icon.png"
   ],
   "notes": "stable-control-bridge-payload-candidate channel package for NodeBlaster-owned updater, branding, status, display, and wallpaper files as selected by the build flags. Production requires signed manifest verification.",
   "release_notes_url": "",
-  "source_commit": "2eda224c2811d516acb310886b24f679dd1ef15a",
-  "display_version": "Ver. 131",
+  "source_commit": "aad265a4992c4778a4d35d11e1a2924181a1bded",
+  "display_version": "Ver. 132",
   "target_profiles": [
     "core",
     "core-plus"
+  ],
+  "post_install_actions": [
+    "install_nodeblaster_miner_widget"
   ]
 }
